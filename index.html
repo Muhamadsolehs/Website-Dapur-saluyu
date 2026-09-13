@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dapur Saluyu — jajanan tradisional, rasa pas, harga selaras.">
+  <title>Dapur Saluyu — Rasa Pas, Harga Selaras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="cursor-glow"></div>
+  <div class="grain"></div>
+  <div class="progress"><span></span></div>
+
+  <header class="nav-wrap">
+    <nav class="nav container">
+      <a class="brand" href="#beranda" aria-label="Dapur Saluyu">
+        <img src="assets/logo-dapur-saluyu.png" alt="Logo Dapur Saluyu">
+      </a>
+      <div class="nav-links">
+        <a class="nav-link active" href="#beranda">Beranda</a>
+        <a class="nav-link" href="#menu">Menu</a>
+        <a class="nav-link" href="#cara-pesan">Cara Pesan</a>
+        <a class="nav-link" href="#tentang">Tentang Kami</a>
+        <a class="nav-link" href="#kontak">Kontak</a>
+      </div>
+      <a class="btn btn-small magnetic" href="#order"><i data-lucide="shopping-bag"></i> Pesan Sekarang</a>
+      <button class="menu-toggle" aria-label="Buka menu"><i data-lucide="menu"></i></button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="beranda" class="hero section">
+      <div class="hero-leaf leaf-a">🍃</div>
+      <div class="hero-leaf leaf-b">🌿</div>
+      <div class="floating-food food-a"><img src="assets/bola-bola.jpg" alt=""></div>
+      <div class="floating-food food-b"><img src="assets/cireng-isi.jpg" alt=""></div>
+      <div class="hero-orbit orbit-1"></div>
+      <div class="hero-orbit orbit-2"></div>
+
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="dot"></span> Cemilan lezat, harga bersahabat</div>
+          <h1>Rasa yang bikin <span>balik lagi.</span></h1>
+          <p class="hero-text">Jajanan tradisional untuk menemani hari, arisan, acara keluarga, sampai kebutuhan usaha. Sederhana, hangat, dan dibuat dengan rasa yang selaras.</p>
+          <div class="hero-actions">
+            <a class="btn magnetic" href="#order"><i data-lucide="message-circle"></i> Pesan Sekarang</a>
+            <a class="btn btn-ghost magnetic" href="#menu">Lihat Menu <i data-lucide="arrow-down-right"></i></a>
+          </div>
+          <div class="trust-row">
+            <div><i data-lucide="leaf"></i><span>Bahan pilihan</span></div>
+            <div><i data-lucide="badge-check"></i><span>Rasa terjaga</span></div>
+            <div><i data-lucide="package-check"></i><span>Siap pesanan</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal reveal-delay">
+          <div class="hero-card tilt">
+            <div class="hero-card-top">
+              <span class="mini-pill">Menu favorit</span>
+              <span class="price-tag">Rp1.000/pcs</span>
+            </div>
+            <div class="food-stage">
+              <div class="stage-ring"></div>
+              <img class="hero-food hero-food-main" src="assets/snack-goreng.jpg" alt="Aneka jajanan Dapur Saluyu">
+              <span class="bubble bubble-1">fresh ✦</span>
+              <span class="bubble bubble-2">enak!</span>
+              <span class="bubble bubble-3">1000/pcs</span>
+            </div>
+            <div class="hero-card-bottom">
+              <div>
+                <small>Siap untuk</small>
+                <strong>Acara &amp; Ngemil</strong>
+              </div>
+              <div class="round-icon"><i data-lucide="arrow-up-right"></i></div>
+            </div>
+          </div>
+          <div class="floating-note note-left"><i data-lucide="heart"></i><span>dibuat dengan rasa</span></div>
+          <div class="floating-note note-right"><i data-lucide="sparkles"></i><span>harga selaras</span></div>
+        </div>
+      </div>
+      <div class="scroll-cue"><span>Scroll untuk menjelajah</span><i data-lucide="arrow-down"></i></div>
+    </section>
+
+    <section class="marquee-section">
+      <div class="marquee">
+        <span>RASA PAS</span><b>✦</b><span>HARGA SELARAS</span><b>✦</b><span>JAJANAN TRADISIONAL</span><b>✦</b>
+        <span>RASA PAS</span><b>✦</b><span>HARGA SELARAS</span><b>✦</b><span>JAJANAN TRADISIONAL</span><b>✦</b>
+      </div>
+    </section>
+
+    <section id="menu" class="section menu-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Pilihan hari ini</div>
+            <h2>Menu <span>favorit.</span></h2>
+          </div>
+          <p>Semua menu <strong>Rp1.000/pcs</strong> dengan minimum order <strong>50 pcs per jenis</strong>.</p>
+        </div>
+
+        <div class="filter-row reveal">
+          <button class="filter active" data-filter="all">Semua</button>
+          <button class="filter" data-filter="manis">Manis</button>
+          <button class="filter" data-filter="asin">Gurih &amp; asin</button>
+          <button class="filter" data-filter="tradisional">Tradisional</button>
+        </div>
+
+        <div class="menu-grid">
+          <article class="menu-card tilt reveal" data-category="manis tradisional" data-name="Pisang Aroma" data-image="assets/snack-goreng.jpg">
+            <div class="menu-image"><img src="assets/snack-goreng.jpg" alt="Pisang Aroma"><span>01</span></div>
+            <div class="menu-info"><div><h3>Pisang Aroma</h3><p>Manis, renyah, harum.</p></div><button class="add-btn" data-item="Pisang Aroma"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="manis" data-name="Donat" data-image="assets/bola-bola.jpg">
+            <div class="menu-image"><img src="assets/bola-bola.jpg" alt="Donat"><span>02</span></div>
+            <div class="menu-info"><div><h3>Donat</h3><p>Aneka varian rasa.</p></div><button class="add-btn" data-item="Donat"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin" data-name="Bapau" data-image="assets/bapau.jpg">
+            <div class="menu-image"><img src="assets/bapau.jpg" alt="Bapau"><span>03</span></div>
+            <div class="menu-info"><div><h3>Bapau</h3><p>Lembut dengan isian.</p></div><button class="add-btn" data-item="Bapau"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin" data-name="Karoket" data-image="assets/gorengan.jpg">
+            <div class="menu-image"><img src="assets/gorengan.jpg" alt="Karoket"><span>04</span></div>
+            <div class="menu-info"><div><h3>Karoket</h3><p>Gurih, hangat, nagih.</p></div><button class="add-btn" data-item="Karoket"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin" data-name="Cireng Isi" data-image="assets/cireng-isi.jpg">
+            <div class="menu-image"><img src="assets/cireng-isi.jpg" alt="Cireng Isi"><span>05</span></div>
+            <div class="menu-info"><div><h3>Cireng Isi</h3><p>Kenyal di luar, isi di dalam.</p></div><button class="add-btn" data-item="Cireng Isi"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="manis" data-name="Puding" data-image="assets/puding.jpg">
+            <div class="menu-image"><img src="assets/puding.jpg" alt="Puding"><span>06</span></div>
+            <div class="menu-info"><div><h3>Puding</h3><p>Lembut dan menyegarkan.</p></div><button class="add-btn" data-item="Puding"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin tradisional" data-name="Bakwan" data-image="assets/gorengan.jpg">
+            <div class="menu-image"><img src="assets/gorengan.jpg" alt="Bakwan"><span>07</span></div>
+            <div class="menu-info"><div><h3>Bakwan</h3><p>Gurih dengan tekstur renyah.</p></div><button class="add-btn" data-item="Bakwan"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin" data-name="Tahu Isi" data-image="assets/cireng-isi.jpg">
+            <div class="menu-image"><img src="assets/cireng-isi.jpg" alt="Tahu Isi"><span>08</span></div>
+            <div class="menu-info"><div><h3>Tahu Isi</h3><p>Gurih dengan isian sayur.</p></div><button class="add-btn" data-item="Tahu Isi"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="manis" data-name="Bola-Bola Isi Manis" data-image="assets/bola-bola.jpg">
+            <div class="menu-image"><img src="assets/bola-bola.jpg" alt="Bola-Bola Isi Manis"><span>09</span></div>
+            <div class="menu-info"><div><h3>Bola-Bola Isi</h3><p>Varian manis.</p></div><button class="add-btn" data-item="Bola-Bola Isi Manis"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin" data-name="Bola-Bola Isi Asin" data-image="assets/bola-bola.jpg">
+            <div class="menu-image"><img src="assets/bola-bola.jpg" alt="Bola-Bola Isi Asin"><span>10</span></div>
+            <div class="menu-info"><div><h3>Bola-Bola Isi</h3><p>Varian asin.</p></div><button class="add-btn" data-item="Bola-Bola Isi Asin"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="manis tradisional" data-name="Pisang Goreng" data-image="assets/snack-goreng.jpg">
+            <div class="menu-image"><img src="assets/snack-goreng.jpg" alt="Pisang Goreng"><span>11</span></div>
+            <div class="menu-info"><div><h3>Pisang Goreng</h3><p>Hangat dan renyah.</p></div><button class="add-btn" data-item="Pisang Goreng"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="tradisional manis" data-name="Gegetuk" data-image="assets/puding.jpg">
+            <div class="menu-image"><img src="assets/puding.jpg" alt="Gegetuk"><span>12</span></div>
+            <div class="menu-info"><div><h3>Gegetuk</h3><p>Jajanan tradisional.</p></div><button class="add-btn" data-item="Gegetuk"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="asin tradisional" data-name="Combro" data-image="assets/gorengan.jpg">
+            <div class="menu-image"><img src="assets/gorengan.jpg" alt="Combro"><span>13</span></div>
+            <div class="menu-info"><div><h3>Combro</h3><p>Gurih dengan rasa khas.</p></div><button class="add-btn" data-item="Combro"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="manis tradisional" data-name="Misro" data-image="assets/snack-goreng.jpg">
+            <div class="menu-image"><img src="assets/snack-goreng.jpg" alt="Misro"><span>14</span></div>
+            <div class="menu-info"><div><h3>Misro</h3><p>Manis di tengah, renyah di luar.</p></div><button class="add-btn" data-item="Misro"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+
+          <article class="menu-card tilt reveal" data-category="manis tradisional" data-name="Dadar Gulung" data-image="assets/puding.jpg">
+            <div class="menu-image"><img src="assets/puding.jpg" alt="Dadar Gulung"><span>15</span></div>
+            <div class="menu-info"><div><h3>Dadar Gulung</h3><p>Lembut dengan rasa tradisional.</p></div><button class="add-btn" data-item="Dadar Gulung"><i data-lucide="plus"></i></button></div>
+            <strong class="menu-price">Rp1.000 <small>/pcs</small></strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="cara-pesan" class="section process-section">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <div>
+            <div class="eyebrow">Cara memesan</div>
+            <h2>Mudah. Cepat. <span>Praktis.</span></h2>
+          </div>
+          <p>Tinggal pilih menu, tentukan jumlah, lalu lanjutkan pesanan.</p>
+        </div>
+        <div class="process-grid">
+          <div class="process-line"></div>
+          <article class="process-card reveal"><span>01</span><div class="process-icon"><i data-lucide="list-checks"></i></div><h3>Pilih menu</h3><p>Pilih jajanan favorit dan tentukan jumlah yang kamu butuhkan.</p></article>
+          <article class="process-card reveal"><span>02</span><div class="process-icon"><i data-lucide="shopping-cart"></i></div><h3>Susun pesanan</h3><p>Gunakan pemilih pesanan untuk menghitung kebutuhan secara cepat.</p></article>
+          <article class="process-card reveal"><span>03</span><div class="process-icon"><i data-lucide="message-circle"></i></div><h3>Konfirmasi</h3><p>Kirim detail pesanan melalui chat untuk dikonfirmasi.</p></article>
+          <article class="process-card reveal"><span>04</span><div class="process-icon"><i data-lucide="package-check"></i></div><h3>Siap diproses</h3><p>Pesanan diteruskan untuk disiapkan sesuai kesepakatan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="tentang" class="section about-section">
+      <div class="leaf-field" aria-hidden="true"><span>🍃</span><span>🌿</span><span>🍃</span><span>🌱</span></div>
+      <div class="container about-grid">
+        <div class="about-image reveal tilt">
+          <img src="assets/gorengan.jpg" alt="Aneka jajanan">
+          <div class="about-badge"><strong>15+</strong><span>pilihan menu</span></div>
+        </div>
+        <div class="about-copy reveal">
+          <div class="eyebrow">Tentang Dapur Saluyu</div>
+          <h2>Jajanan sederhana,<br><span>dibuat sepenuh rasa.</span></h2>
+          <p>Dapur Saluyu hadir untuk membuat momen ngemil dan acara terasa lebih mudah. Kami membawa jajanan yang familiar dengan harga yang bersahabat, sehingga bisa dinikmati bersama siapa saja.</p>
+          <div class="value-list">
+            <div><div class="value-icon"><i data-lucide="leaf"></i></div><div><strong>Bahan pilihan</strong><small>Dipilih untuk menjaga rasa.</small></div></div>
+            <div><div class="value-icon"><i data-lucide="badge-check"></i></div><div><strong>Harga selaras</strong><small>Rp1.000/pcs untuk semua menu.</small></div></div>
+            <div><div class="value-icon"><i data-lucide="heart-handshake"></i></div><div><strong>Pelayanan ramah</strong><small>Pesanan diproses dengan perhatian.</small></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="order" class="section order-section">
+      <div class="container">
+        <div class="order-card reveal">
+          <div class="order-copy">
+            <div class="eyebrow light">Pesan sekarang</div>
+            <h2>Siap bikin acara<br><span>lebih berasa?</span></h2>
+            <p>Minimum order <strong>50 pcs per jenis</strong>. Pilih menu di atas atau langsung mulai susun pesanan.</p>
+            <button class="btn btn-light magnetic" id="openOrder"><i data-lucide="shopping-bag"></i> Susun Pesanan</button>
+          </div>
+          <div class="order-art">
+            <div class="art-circle"></div>
+            <img src="assets/cireng-isi.jpg" alt="">
+            <span class="art-leaf">🍃</span>
+            <span class="art-leaf art-leaf-2">🌿</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontak" class="section contact-section">
+      <div class="container contact-grid">
+        <div class="reveal">
+          <div class="eyebrow">Mari terhubung</div>
+          <h2>Dari dapur kecil,<br><span>untuk momen besar.</span></h2>
+        </div>
+        <div class="contact-card reveal">
+          <div class="contact-row"><i data-lucide="message-circle"></i><div><small>Pemesanan</small><strong>WhatsApp Dapur Saluyu</strong></div><i data-lucide="arrow-up-right"></i></div>
+          <div class="contact-row"><i data-lucide="map-pin"></i><div><small>Lokasi</small><strong>Hubungi kami untuk detail lokasi</strong></div><i data-lucide="arrow-up-right"></i></div>
+          <div class="contact-row"><i data-lucide="clock-3"></i><div><small>Pesanan</small><strong>Konfirmasi jadwal terlebih dahulu</strong></div><i data-lucide="arrow-up-right"></i></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><img src="assets/logo-dapur-saluyu.png" alt="Dapur Saluyu"><p>Rasa pas, harga selaras.</p></div>
+      <div class="footer-copy">© <span id="year"></span> Dapur Saluyu. Dibuat dengan rasa.</div>
+      <a href="#beranda" class="back-top"><i data-lucide="arrow-up"></i></a>
+    </div>
+  </footer>
+
+  <div class="order-modal" id="orderModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal">
+      <button class="modal-close" data-close aria-label="Tutup"><i data-lucide="x"></i></button>
+      <div class="modal-head">
+        <div class="eyebrow">Order builder</div>
+        <h2>Susun pesananmu.</h2>
+        <p>Minimum <strong>50 pcs per jenis</strong>.</p>
+      </div>
+      <div class="order-list" id="orderList"></div>
+      <div class="empty-order" id="emptyOrder"><i data-lucide="shopping-basket"></i><p>Belum ada menu dipilih.</p><button class="btn btn-ghost" data-close>Lihat Menu</button></div>
+      <div class="order-summary">
+        <div><span>Total pcs</span><strong id="totalQty">0</strong></div>
+        <div><span>Estimasi</span><strong id="totalPrice">Rp0</strong></div>
+      </div>
+      <button class="btn full" id="sendOrder"><i data-lucide="message-circle"></i> Lanjutkan Pesanan</button>
+      <small class="modal-note">Demo website — nomor WhatsApp dapat kamu ganti di <code>script.js</code>.</small>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><i data-lucide="check"></i><span>Menu ditambahkan</span></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

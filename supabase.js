@@ -4,15 +4,16 @@ require("dotenv").config();
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SECRET_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.warn("⚠️ Peringatan: SUPABASE_URL atau SUPABASE_SECRET_KEY belum diatur di .env");
+let supabase = null;
+if (supabaseUrl && supabaseKey) {
+  supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+} else {
+  console.warn("⚠️ Peringatan: SUPABASE_URL atau SUPABASE_SECRET_KEY belum diatur di environment.");
 }
-
-const supabase = createClient(supabaseUrl || "", supabaseKey || "", {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-  },
-});
 
 module.exports = supabase;

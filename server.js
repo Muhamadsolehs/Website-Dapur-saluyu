@@ -169,6 +169,9 @@ const keepAliveState = {
 
 async function executeKeepAlivePing(source = "Automated Cron") {
   const start = Date.now();
+  if (!supabase) {
+    return { success: false, error: "Supabase belum terkonfigurasi di environment." };
+  }
   try {
     // 1. Run a lightweight SELECT query against menus to exercise PostgreSQL
     const { data, error } = await supabase.from("menus").select("id").limit(1);
@@ -272,6 +275,13 @@ app.get("/api/keep-alive/status", (req, res) => {
 app.get("/api/menus", async (req, res) => {
   try {
     const imagesMap = getLocalImagesMap();
+
+    if (!supabase) {
+      return res.status(503).json({
+        success: false,
+        error: "Koneksi database belum disetel di Environment Variables (SUPABASE_URL & SUPABASE_SECRET_KEY).",
+      });
+    }
 
     // Fetch menus from Supabase
     const { data, error } = await supabase

@@ -17,7 +17,24 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve frontend website & static assets
 app.use(express.static(path.join(__dirname)));
+app.use(express.static(process.cwd()));
 app.use("/admin", express.static(path.join(__dirname, "admin")));
+app.use("/admin", express.static(path.join(process.cwd(), "admin")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+app.use("/assets", express.static(path.join(process.cwd(), "assets")));
+
+// Explicit routes for landing page & admin dashboard
+app.get("/", (req, res) => {
+  const filePath = path.join(__dirname, "index.html");
+  if (fs.existsSync(filePath)) return res.sendFile(filePath);
+  return res.sendFile(path.join(process.cwd(), "index.html"));
+});
+
+app.get(["/admin", "/admin/"], (req, res) => {
+  const filePath = path.join(__dirname, "admin", "index.html");
+  if (fs.existsSync(filePath)) return res.sendFile(filePath);
+  return res.sendFile(path.join(process.cwd(), "admin", "index.html"));
+});
 
 // Setup Multer for in-memory file uploads (max 5MB)
 const upload = multer({

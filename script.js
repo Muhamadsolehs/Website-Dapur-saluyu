@@ -22,8 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const STEP_PCS = 50;
   
   // Auto-detect API Base URL: Fallback to port 5000 if opened on other ports (e.g. Laragon Apache port 80 or file:///)
+  const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
   const isDedicatedPort = window.location.port === "5000" || window.location.port === "3000";
-  const API_BASE = (window.location.protocol === "file:" || !isDedicatedPort)
+  const API_BASE = (window.location.protocol === "file:" || (isLocalHost && !isDedicatedPort))
     ? "http://localhost:5000"
     : "";
 

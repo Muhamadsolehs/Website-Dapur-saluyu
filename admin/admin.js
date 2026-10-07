@@ -16,9 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
   refreshIcons();
   window.addEventListener("load", refreshIcons);
 
-  // --- API Base URL: Fallback to port 5000 if opened from Laragon port 80 or file:/// ---
+  // --- API Base URL ---
+  // On production (e.g. Vercel), use relative path "". Only use localhost:5000 if running locally via Laragon or file:///
+  const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
   const isDedicatedPort = window.location.port === "5000" || window.location.port === "3000";
-  const API_BASE = (window.location.protocol === "file:" || !isDedicatedPort)
+  const API_BASE = (window.location.protocol === "file:" || (isLocalHost && !isDedicatedPort))
     ? "http://localhost:5000"
     : "";
 

@@ -525,6 +525,46 @@ Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
     syncAllCardUIs();
   }
 
+  // --- Discreet Admin Access Mechanisms (Khusus Pengelola) ---
+  // 1. Keyboard Shortcut: Tekan Ctrl + Shift + A atau Alt + A dari mana saja
+  document.addEventListener("keydown", (e) => {
+    if (
+      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") ||
+      (e.altKey && e.key.toLowerCase() === "a")
+    ) {
+      e.preventDefault();
+      window.location.href = "/admin/";
+    }
+  });
+
+  // 2. Double-Click pada teks hak cipta / footer
+  const footerCopyrightWrap = document.getElementById("footerCopyrightWrap");
+  if (footerCopyrightWrap) {
+    footerCopyrightWrap.addEventListener("dblclick", () => {
+      window.location.href = "/admin/";
+    });
+  }
+
+  // 3. Triple-Click pada logo Dapur Saluyu di header
+  let brandClickCount = 0;
+  let brandClickTimer = null;
+  const navBrand = document.querySelector(".nav-brand");
+  if (navBrand) {
+    navBrand.addEventListener("click", (e) => {
+      brandClickCount++;
+      if (brandClickTimer) clearTimeout(brandClickTimer);
+      if (brandClickCount >= 3) {
+        brandClickCount = 0;
+        e.preventDefault();
+        window.location.href = "/admin/";
+        return;
+      }
+      brandClickTimer = setTimeout(() => {
+        brandClickCount = 0;
+      }, 700);
+    });
+  }
+
   // Run Initial Sync
   syncAllCardUIs();
   updateCartState();

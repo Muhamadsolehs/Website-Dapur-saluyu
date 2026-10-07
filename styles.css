@@ -1676,6 +1676,43 @@ h1, h2, h3, h4 {
   color: var(--text-muted);
 }
 
+.footer-bottom-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+  user-select: none;
+}
+
+/* Tombol Rahasia Akses Admin:
+   Sangat samar (opacity 0.2), tampak seperti aksen kecil atau tak kasat mata
+   bagi pengunjung umum, namun mudah diakses oleh pengelola */
+.admin-discreet-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  opacity: 0.22;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.25s ease, color 0.25s ease, background 0.25s ease, transform 0.2s ease;
+}
+
+.admin-discreet-btn:hover {
+  opacity: 0.95;
+  color: var(--primary);
+  background: var(--primary-light);
+  transform: scale(1.12);
+}
+
+.admin-discreet-icon {
+  width: 13px;
+  height: 13px;
+}
+
 .back-to-top {
   width: 36px;
   height: 36px;

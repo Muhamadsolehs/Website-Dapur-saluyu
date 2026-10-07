@@ -203,18 +203,20 @@ async function executeKeepAlivePing(source = "Automated Cron") {
   }
 }
 
-// Setup background interval (defaults to every 6 hours)
+// Setup background interval (defaults to every 6 hours) — hanya aktif di mode standalone server
 const KEEP_ALIVE_HOURS = parseFloat(process.env.KEEP_ALIVE_INTERVAL_HOURS) || 6;
 const KEEP_ALIVE_MS = KEEP_ALIVE_HOURS * 60 * 60 * 1000;
 
-setInterval(() => {
-  executeKeepAlivePing("Interval Worker (SetInterval)");
-}, KEEP_ALIVE_MS);
+if (require.main === module) {
+  setInterval(() => {
+    executeKeepAlivePing("Interval Worker (SetInterval)");
+  }, KEEP_ALIVE_MS);
 
-// Run initial ping 5 seconds after server starts
-setTimeout(() => {
-  executeKeepAlivePing("Startup Boot Check");
-}, 5000);
+  // Run initial ping 5 seconds after server starts
+  setTimeout(() => {
+    executeKeepAlivePing("Startup Boot Check");
+  }, 5000);
+}
 
 // ============================================================================
 // API ROUTES
@@ -547,12 +549,17 @@ app.all("/api/*", (req, res) => {
   res.status(404).json({ success: false, error: "Endpoint tidak ditemukan." });
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 Dapur Saluyu Server berjalan di http://localhost:${PORT}`);
-  console.log(`🌐 Landing Page  : http://localhost:${PORT}/`);
-  console.log(`📊 Admin Dashboard: http://localhost:${PORT}/admin/`);
-  console.log(`⚡ Keep-Alive Interval: Setiap ${KEEP_ALIVE_HOURS} jam (Otomatis)`);
-  console.log(`====================================================`);
-});
+// Start Server (Listen when run locally or directly, export app for Vercel/Serverless)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🚀 Dapur Saluyu Server berjalan di http://localhost:${PORT}`);
+    console.log(`🌐 Landing Page  : http://localhost:${PORT}/`);
+    console.log(`📊 Admin Dashboard: http://localhost:${PORT}/admin/`);
+    console.log(`⚡ Keep-Alive Interval: Setiap ${KEEP_ALIVE_HOURS} jam (Otomatis)`);
+    console.log(`====================================================`);
+  });
+}
+
+module.exports = app;
+

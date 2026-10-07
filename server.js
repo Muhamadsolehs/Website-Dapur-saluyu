@@ -271,10 +271,13 @@ app.get("/api/auth/me", requireAdminAuth, (req, res) => {
 
 // --- Keep-Alive Status & Manual Trigger Route ---
 app.get("/api/keep-alive", async (req, res) => {
-  const result = await executeKeepAlivePing("Manual API Request /keep-alive");
+  const isCron = req.headers["x-vercel-cron"] || req.query.cron;
+  const source = isCron ? "Vercel Cron Job" : "API Keep-Alive Request";
+  const result = await executeKeepAlivePing(source);
   res.json({
     ...result,
     keepAliveState,
+    source,
     info: "Endpoint ini berinteraksi langsung dengan PostgreSQL di Supabase untuk mereset counter inaktivitas 7 hari.",
   });
 });

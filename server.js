@@ -36,6 +36,21 @@ app.get(["/admin", "/admin/"], (req, res) => {
   return res.sendFile(path.join(process.cwd(), "admin", "index.html"));
 });
 
+// Explicit routes for favicons & icons
+app.get(["/favicon.ico", "/favicon.png", "/apple-touch-icon.png"], (req, res) => {
+  const filename = path.basename(req.path);
+  const candidates = [
+    path.join(__dirname, filename),
+    path.join(process.cwd(), filename),
+    path.join(__dirname, "assets", filename),
+    path.join(process.cwd(), "assets", filename),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return res.sendFile(candidate);
+  }
+  return res.status(404).end();
+});
+
 // Setup Multer for in-memory file uploads (max 5MB)
 const upload = multer({
   storage: multer.memoryStorage(),

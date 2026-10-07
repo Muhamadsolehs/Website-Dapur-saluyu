@@ -9,6 +9,9 @@
           "index.html",
           "styles.css",
           "script.js",
+          "favicon.ico",
+          "favicon.png",
+          "apple-touch-icon.png",
           "admin/**",
           "assets/**"
         ]

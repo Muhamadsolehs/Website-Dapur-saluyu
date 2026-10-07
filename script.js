@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DAPUR SALUYU — Minimalist & Artisanal Website Logic
+   DAPUR SALUYU — Minimalist & Artisanal Website Logic (With Dynamic Sync)
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,9 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Constants & State ---
-  const WHATSAPP_NUMBER = "62895634751493";
+  let whatsappNumber = "62895634751493";
   const PRICE_PER_PCS = 1000;
   const STEP_PCS = 50;
+  const API_BASE = ""; // Relative if served by same server, fallback to http://localhost:5000 if opened on other ports
 
   // Shopping Cart state: Map<string, number>
   const cart = new Map();
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const filterBtns = document.querySelectorAll(".filter-btn");
   const searchInput = document.getElementById("menuSearch");
-  const menuCards = document.querySelectorAll(".menu-card");
+  const menuGrid = document.getElementById("menuGrid");
   const noMenuFound = document.getElementById("noMenuFound");
   const btnResetSearch = document.getElementById("btnResetSearch");
 
@@ -118,15 +119,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applyMenuFilters() {
     const query = (searchInput ? searchInput.value.toLowerCase().trim() : "");
+    const menuCards = document.querySelectorAll(".menu-card");
     let visibleCount = 0;
 
     menuCards.forEach((card) => {
-      const cardCategory = card.dataset.category || "";
+      const cardCategory = (card.dataset.category || "").toLowerCase();
       const cardName = (card.dataset.name || "").toLowerCase();
       const cardDesc = (card.querySelector(".menu-desc")?.textContent || "").toLowerCase();
 
       const matchesCategory =
-        currentFilter === "all" || cardCategory.split(" ").includes(currentFilter);
+        currentFilter === "all" || cardCategory.includes(currentFilter.toLowerCase());
       const matchesSearch =
         !query || cardName.includes(query) || cardDesc.includes(query);
 
@@ -184,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function syncAllCardUIs() {
+    const menuCards = document.querySelectorAll(".menu-card");
     menuCards.forEach((card) => {
       const name = card.dataset.name;
       if (name) updateCardUI(name);
@@ -248,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Menu Grid Card Events (Delegated)
-  const menuGrid = document.getElementById("menuGrid");
   if (menuGrid) {
     menuGrid.addEventListener("click", (e) => {
       const addBtn = e.target.closest(".btn-add-item");
@@ -401,7 +403,7 @@ ${itemsListText}
 
 Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
 
-      const encodedUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      const encodedUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
       window.open(encodedUrl, "_blank");
     });
   }
@@ -421,7 +423,110 @@ Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
     }
   });
 
-  // Initial Sync
+  // ==========================================================================
+  // DYNAMIC SYNC FROM BACKEND (SUPABASE)
+  // ==========================================================================
+  async function syncWithBackend() {
+    // 1. Fetch Dynamic Site Settings (WhatsApp Number & Content)
+    try {
+      const res = await fetch(`${API_BASE}/api/settings`);
+      const data = await res.json();
+      if (data.success && data.settings) {
+        const s = data.settings;
+        if (s.whatsapp_number) {
+          whatsappNumber = s.whatsapp_number;
+          // Update WA links on page
+          document.querySelectorAll('a[href*="wa.me/"]').forEach((a) => {
+            a.href = `https://wa.me/${s.whatsapp_number}`;
+          });
+        }
+        if (s.tagline) {
+          document.querySelectorAll(".brand-tagline").forEach((el) => {
+            el.textContent = s.tagline;
+          });
+        }
+        if (s.hero_lead) {
+          const heroLeadEl = document.querySelector(".hero-lead");
+          if (heroLeadEl) heroLeadEl.textContent = s.hero_lead;
+        }
+      }
+    } catch (_) {
+      // Keep static default gracefully
+    }
+
+    // 2. Fetch Live Menus from Supabase
+    try {
+      const res = await fetch(`${API_BASE}/api/menus`);
+      const data = await res.json();
+
+      if (data.success && Array.isArray(data.menus) && data.menus.length > 0) {
+        renderDynamicMenuGrid(data.menus);
+      }
+    } catch (_) {
+      // Keep static menu grid gracefully
+    }
+  }
+
+  function renderDynamicMenuGrid(menus) {
+    if (!menuGrid) return;
+
+    // Filter only available menus for customers
+    const availableMenus = menus.filter((m) => m.is_available);
+
+    const cardsHtml = availableMenus
+      .map((menu) => {
+        const cat = (menu.category || "Tradisional").toLowerCase();
+        const tagText = menu.category || "Tradisional";
+        const imgSrc = menu.image_url || "assets/snack-goreng.jpg";
+        const price = menu.price || 1000;
+        const minQty = menu.min_quantity || 50;
+        const desc = menu.description || (menu.variant ? `Varian: ${menu.variant}` : "Jajanan tradisional gurih nikmat.");
+
+        return `
+        <article class="menu-card" data-category="${cat}" data-name="${menu.name}">
+          <div class="menu-image-wrap">
+            <img src="${imgSrc}" alt="${menu.name}" onerror="this.src='assets/snack-goreng.jpg'">
+            <span class="menu-tag">${tagText}</span>
+          </div>
+          <div class="menu-content">
+            <h3 class="menu-title">${menu.name}</h3>
+            <p class="menu-desc">${desc}</p>
+            <div class="menu-bottom">
+              <div class="price-box">
+                <span class="price-main">Rp${price.toLocaleString("id-ID")}</span>
+                <span class="price-unit">per pcs · min. ${minQty}</span>
+              </div>
+              <div class="menu-action">
+                <button class="btn-add-item" data-item="${menu.name}">
+                  <i data-lucide="plus"></i> Tambah
+                </button>
+                <div class="card-stepper" data-stepper="${menu.name}">
+                  <button class="stepper-btn" data-step="-50" data-item="${menu.name}">−</button>
+                  <span class="stepper-count" data-count="${menu.name}">0</span>
+                  <button class="stepper-btn" data-step="50" data-item="${menu.name}">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+      })
+      .join("");
+
+    menuGrid.innerHTML = cardsHtml + `
+      <div class="no-menu-found" id="noMenuFound">
+        <i data-lucide="search-x"></i>
+        <p>Tidak ada jajanan yang cocok dengan pencarian Anda.</p>
+        <button class="btn btn-secondary btn-small" id="btnResetSearch">Reset Pencarian</button>
+      </div>
+    `;
+
+    if (window.lucide) window.lucide.createIcons();
+    syncAllCardUIs();
+  }
+
+  // Run Initial Sync
   syncAllCardUIs();
   updateCartState();
+  syncWithBackend();
 });

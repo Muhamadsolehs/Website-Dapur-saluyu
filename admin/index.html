@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Dapur Saluyu</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Admin Styles -->
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- ======================================================================
+       LOGIN SCREEN (SINGLE USER)
+       ====================================================================== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <img src="../assets/logo-dapur-saluyu.png" alt="Dapur Saluyu" class="login-logo">
+      <h2>Admin Dapur Saluyu</h2>
+      <p>Masuk untuk mengelola data menu &amp; informasi website.</p>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="loginUsername">Username Admin</label>
+          <input type="text" id="loginUsername" placeholder="admin" value="admin" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Kata Sandi</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" value="dapursaluyu2026!" required>
+        </div>
+
+        <button type="submit" class="btn" id="btnLoginSubmit" style="width: 100%; margin-top: 6px;">
+          <i data-lucide="lock"></i> Masuk ke Dashboard
+        </button>
+
+        <div class="login-hint">
+          <strong>Akses Tunggal (Single User):</strong><br>
+          Username: <code>admin</code><br>
+          Password: <code>dapursaluyu2026!</code>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MAIN ADMIN SHELL
+       ====================================================================== -->
+  <div class="admin-shell" id="adminShell">
+    
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-brand">
+        <img src="../assets/logo-dapur-saluyu.png" alt="Dapur Saluyu">
+        <div class="header-title-box">
+          <strong>Dapur Saluyu Admin</strong>
+          <span>Panel Kelola Database &amp; Konten</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="user-badge">
+          <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i> Administrator
+        </span>
+        <a href="../" target="_blank" class="btn btn-secondary btn-sm" title="Buka website di tab baru">
+          <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Lihat Website
+        </a>
+        <button class="btn btn-danger btn-sm" id="btnLogout" title="Keluar dari sesi admin">
+          <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Keluar
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs Bar -->
+    <nav class="admin-nav-bar">
+      <button class="nav-tab-btn active" data-tab="tabMenus">
+        <i data-lucide="utensils"></i> Katalog Menu Makanan
+      </button>
+      <button class="nav-tab-btn" data-tab="tabSettings">
+        <i data-lucide="sliders"></i> Informasi Statis Website
+      </button>
+      <button class="nav-tab-btn" data-tab="tabKeepAlive">
+        <i data-lucide="database"></i> Supabase Keep-Alive &amp; DB
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+
+      <!-- ==================================================================
+           TAB 1: KATALOG MENU MAKANAN
+           ================================================================== -->
+      <section class="tab-pane active" id="tabMenus">
+        <div class="tab-header">
+          <div>
+            <h2>Kelola Menu Makanan</h2>
+            <p>Tambah, edit harga, status ketersediaan, dan perbarui foto menu di Supabase PostgreSQL.</p>
+          </div>
+          <button class="btn" id="btnOpenAddModal">
+            <i data-lucide="plus-circle"></i> Tambah Menu Baru
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i data-lucide="package"></i></div>
+            <div class="stat-info">
+              <strong id="statTotalMenu">0</strong>
+              <span>Total Menu</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i data-lucide="check-circle" style="color: var(--success);"></i></div>
+            <div class="stat-info">
+              <strong id="statAvailableMenu">0</strong>
+              <span>Menu Tersedia</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i data-lucide="x-circle" style="color: var(--danger);"></i></div>
+            <div class="stat-info">
+              <strong id="statEmptyMenu">0</strong>
+              <span>Menu Kosong/Habis</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i data-lucide="tag" style="color: var(--accent);"></i></div>
+            <div class="stat-info">
+              <strong id="statAvgPrice">Rp1.000</strong>
+              <span>Harga Standar/pcs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toolbar: Search + Category Filter -->
+        <div class="toolbar-card">
+          <div class="toolbar-left">
+            <input type="text" id="adminSearchMenu" class="admin-search-input" placeholder="Cari nama menu...">
+            <select id="adminFilterCategory" class="admin-select">
+              <option value="all">Semua Kategori</option>
+              <option value="Manis">Manis &amp; Legit</option>
+              <option value="Gurih">Gurih &amp; Asin</option>
+              <option value="Tradisional">Tradisional</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnRefreshMenus">
+            <i data-lucide="rotate-cw" style="width: 14px; height: 14px;"></i> Segarkan Data
+          </button>
+        </div>
+
+        <!-- Menus Table Card -->
+        <div class="table-card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Foto</th>
+                <th>Nama Menu</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+                <th>Min. Beli</th>
+                <th>Status Ketersediaan</th>
+                <th style="text-align: right; width: 140px;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="menusTableBody">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                  Memuat data menu dari Supabase...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           TAB 2: INFORMASI STATIS WEBSITE
+           ================================================================== -->
+      <section class="tab-pane" id="tabSettings">
+        <div class="tab-header">
+          <div>
+            <h2>Informasi Statis Website</h2>
+            <p>Ubah nomor WhatsApp pemesanan, alamat, jam operasional, dan teks informasi landing page.</p>
+          </div>
+          <button class="btn" id="btnSaveSettings">
+            <i data-lucide="save"></i> Simpan Perubahan
+          </button>
+        </div>
+
+        <form id="settingsForm" class="settings-form-grid">
+          <!-- Kolom 1: Kontak & Bisnis -->
+          <div class="settings-card">
+            <h3>Kontak &amp; Identitas Usaha</h3>
+            <p>Pengaturan ini langsung tersinkron ke tombol pemesanan WhatsApp dan footer.</p>
+
+            <div class="form-group">
+              <label for="setWhatsApp">Nomor WhatsApp Pemesanan</label>
+              <input type="text" id="setWhatsApp" placeholder="62895634751493" required>
+              <small class="form-help">Gunakan format internasional tanpa tanda plus (+), contoh: <code>62895634751493</code>.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="setBusinessName">Nama Usaha / Brand</label>
+              <input type="text" id="setBusinessName" placeholder="Dapur Saluyu">
+            </div>
+
+            <div class="form-group">
+              <label for="setTagline">Slogan / Tagline</label>
+              <input type="text" id="setTagline" placeholder="Rasa Pas, Harga Selaras">
+            </div>
+
+            <div class="form-group">
+              <label for="setMinOrderGlobal">Minimal Pemesanan Global (pcs)</label>
+              <input type="number" id="setMinOrderGlobal" placeholder="50" min="1">
+            </div>
+          </div>
+
+          <!-- Kolom 2: Lokasi & Teks Banner -->
+          <div class="settings-card">
+            <h3>Lokasi &amp; Teks Sambutan</h3>
+            <p>Sesuaikan informasi operasional dan deskripsi yang dibaca pelanggan.</p>
+
+            <div class="form-group">
+              <label for="setOperatingHours">Jam Operasional</label>
+              <input type="text" id="setOperatingHours" placeholder="Buka Setiap Hari (Pre-order H-1)">
+            </div>
+
+            <div class="form-group">
+              <label for="setAddress">Area Layanan / Lokasi</label>
+              <input type="text" id="setAddress" placeholder="Melayani Area Sekitar & Pengiriman Instan">
+            </div>
+
+            <div class="form-group">
+              <label for="setHeroLead">Teks Deskripsi Hero (Landing Page)</label>
+              <textarea id="setHeroLead" rows="4" placeholder="Deskripsi pembuka pada halaman depan..."></textarea>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ==================================================================
+           TAB 3: SUPABASE KEEP-ALIVE & DB HEALTH
+           ================================================================== -->
+      <section class="tab-pane" id="tabKeepAlive">
+        <div class="tab-header">
+          <div>
+            <h2>Supabase Keep-Alive &amp; PostgreSQL Monitor</h2>
+            <p>Sistem otomatis berinteraksi dengan database untuk mencegah auto-pause 7 hari inaktivitas free tier Supabase.</p>
+          </div>
+          <button class="btn" id="btnTriggerKeepAlive">
+            <i data-lucide="zap"></i> Uji Interaksi Database Sekarang
+          </button>
+        </div>
+
+        <div class="keepalive-grid">
+          <!-- Status Interaksi -->
+          <div class="keepalive-card">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <h3>Status Koneksi PostgreSQL</h3>
+              <span class="status-badge active" id="dbStatusBadge">
+                <span class="ping-dot"></span> <span id="dbStatusText">AKTIF &amp; TERHUBUNG</span>
+              </span>
+            </div>
+
+            <div class="health-list">
+              <div class="health-row">
+                <span>Database Provider</span>
+                <strong>PostgreSQL (Supabase Cloud)</strong>
+              </div>
+              <div class="health-row">
+                <span>Project Host</span>
+                <code>uzmjmsxneuqhnkyhjlwd.supabase.co</code>
+              </div>
+              <div class="health-row">
+                <span>Interaksi Terakhir</span>
+                <strong id="keepAliveLastTime">-</strong>
+              </div>
+              <div class="health-row">
+                <span>Waktu Respon (Latency)</span>
+                <strong id="keepAliveLatency" style="color: var(--success);">- ms</strong>
+              </div>
+              <div class="health-row">
+                <span>Total Interaksi Terjadwal</span>
+                <strong id="keepAliveTotalPings">0 kali</strong>
+              </div>
+              <div class="health-row">
+                <span>Interval Otomatis Lokal</span>
+                <strong>Setiap 6 Jam (Background Worker)</strong>
+              </div>
+            </div>
+
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+              ✅ <strong>Perlindungan Ganda:</strong> Server ini secara otomatis menjalankan query ringan ke tabel <code>menus</code> setiap 6 jam tanpa memerlukan login user.
+            </p>
+          </div>
+
+          <!-- Cloud Keep-Alive Guide -->
+          <div class="keepalive-card">
+            <h3>Perlindungan Cloud (GitHub Actions)</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+              Bahkan jika komputer atau laptop Anda sedang dimatikan berhari-hari, alur kerja <strong>GitHub Actions</strong> yang sudah terpasang akan tetap mem-ping database Supabase dari cloud!
+            </p>
+
+            <div class="guide-box">
+              <strong>Workflow File:</strong><br>
+              <code>.github/workflows/supabase-keepalive.yml</code><br><br>
+              <strong>Jadwal Eksekusi:</strong><br>
+              Setiap 3 hari sekali otomatis di jam 11:00 WIB.<br><br>
+              <strong>Aksi:</strong><br>
+              Menjalankan <code>curl GET /rest/v1/menus?select=id&amp;limit=1</code> langsung ke Supabase, sehingga status database selalu <em>Active</em> dan <strong>tidak akan pernah terpause</strong>.
+            </div>
+
+            <div style="margin-top: 16px;">
+              <a href="https://supabase.com/dashboard/project/uzmjmsxneuqhnkyhjlwd" target="_blank" class="btn btn-secondary btn-sm" style="width: 100%;">
+                <i data-lucide="external-link"></i> Buka Dashboard Supabase
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ======================================================================
+       MODAL: TAMBAH / EDIT MENU
+       ====================================================================== -->
+  <div class="modal-overlay" id="menuModalOverlay">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 id="modalMenuTitle">Tambah Menu Baru</h3>
+        <button class="btn btn-secondary btn-sm" id="btnCloseMenuModal" style="padding: 4px 8px;">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <form id="menuForm">
+        <div class="modal-content-scroll">
+          <input type="hidden" id="menuId">
+
+          <!-- Upload Foto Menu -->
+          <div class="form-group">
+            <label>Foto Menu Makanan</label>
+            <div class="upload-preview-wrap" id="uploadPreviewWrap">
+              <img id="uploadPreviewImg" src="" alt="Preview">
+            </div>
+            <div class="image-upload-area" id="imageUploadArea">
+              <i data-lucide="image-plus" style="width: 32px; height: 32px; color: var(--primary); margin-bottom: 8px;"></i>
+              <p style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Pilih atau Tarik Foto Menu ke Sini</p>
+              <span style="font-size: 11.5px; color: var(--text-muted);">Mendukung JPG, PNG, WEBP (Maks. 5MB)</span>
+              <input type="file" id="fileMenuImage" accept="image/*" style="display: none;">
+            </div>
+            <input type="hidden" id="menuImageUrl">
+          </div>
+
+          <div class="form-group">
+            <label for="menuName">Nama Menu *</label>
+            <input type="text" id="menuName" placeholder="Contoh: Pisang Aroma" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label for="menuCategory">Kategori</label>
+              <select id="menuCategory">
+                <option value="Manis">Manis &amp; Legit</option>
+                <option value="Gurih">Gurih &amp; Asin</option>
+                <option value="Tradisional">Tradisional</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="menuVariant">Varian (Opsional)</label>
+              <input type="text" id="menuVariant" placeholder="Contoh: Manis, Cokelat, dsb.">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label for="menuPrice">Harga per Pcs (Rp)</label>
+              <input type="number" id="menuPrice" value="1000" min="100" step="100" required>
+            </div>
+
+            <div class="form-group">
+              <label for="menuMinQuantity">Minimal Beli (pcs)</label>
+              <input type="number" id="menuMinQuantity" value="50" min="1" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="menuDescription">Deskripsi Menu</label>
+            <textarea id="menuDescription" rows="2" placeholder="Jelaskan kelezatan atau tekstur menu..."></textarea>
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
+            <label class="switch" style="margin-bottom: 0;">
+              <input type="checkbox" id="menuIsAvailable" checked>
+              <span class="slider"></span>
+            </label>
+            <span style="font-size: 13px; font-weight: 600;">Status Menu Tersedia untuk Dipesan</span>
+          </div>
+        </div>
+
+        <div class="modal-bottom">
+          <button type="button" class="btn btn-secondary" id="btnCancelMenuModal">Batal</button>
+          <button type="submit" class="btn" id="btnSaveMenuSubmit">
+            <i data-lucide="check"></i> Simpan Menu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div class="admin-toast" id="adminToast">
+    <i data-lucide="check-circle" style="color: #72E09B;"></i>
+    <span id="toastMsg">Tindakan berhasil!</span>
+  </div>
+
+  <!-- Admin JavaScript -->
+  <script src="admin.js"></script>
+</body>
+</html>

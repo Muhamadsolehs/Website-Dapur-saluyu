@@ -1,0 +1,45 @@
+name: Supabase Database Keep-Alive
+
+on:
+  schedule:
+    # Berjalan otomatis setiap 3 hari sekali pukul 04:00 UTC (11:00 WIB)
+    - cron: '0 4 */3 * *'
+  workflow_dispatch: # Dapat dipicu manual kapan saja dari tab Actions di GitHub
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase PostgreSQL Database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          echo "Sending automated keep-alive ping to Supabase..."
+          
+          # Gunakan URL project default jika belum diatur di secrets
+          URL="${SUPABASE_URL:-https://uzmjmsxneuqhnkyhjlwd.supabase.co}"
+          KEY="${SUPABASE_KEY}"
+          
+          if [ -z "$KEY" ]; then
+            echo "ℹ️ Catatan: SUPABASE_SECRET_KEY belum diisi di Repository Secrets (Settings -> Secrets -> Actions)."
+            echo "Pencegahan pause tetap aktif berjalan via Server Worker lokal (server.js)."
+            exit 0
+          fi
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$URL/rest/v1/menus?select=id&limit=1" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY")
+          
+          HTTP_BODY=$(echo "$RESPONSE" | sed '$d')
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          
+          echo "Response Body: $HTTP_BODY"
+          echo "HTTP Status Code: $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "SUCCESS: Supabase PostgreSQL is active. Inactivity pause counter has been reset!"
+          else
+            echo "ERROR: Failed to ping Supabase (HTTP $HTTP_STATUS)"
+            exit 1
+          fi

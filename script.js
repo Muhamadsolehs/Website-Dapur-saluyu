@@ -3,16 +3,29 @@
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize Lucide Icons
-  if (window.lucide) {
-    window.lucide.createIcons();
+  // Initialize Lucide Icons with robust fallback helper
+  function refreshIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {
+        console.warn("Lucide createIcons error:", e);
+      }
+    }
   }
+  refreshIcons();
+  window.addEventListener("load", refreshIcons);
 
   // --- Constants & State ---
   let whatsappNumber = "62895634751493";
   const PRICE_PER_PCS = 1000;
   const STEP_PCS = 50;
-  const API_BASE = ""; // Relative if served by same server, fallback to http://localhost:5000 if opened on other ports
+  
+  // Auto-detect API Base URL: Fallback to port 5000 if opened on other ports (e.g. Laragon Apache port 80 or file:///)
+  const isDedicatedPort = window.location.port === "5000" || window.location.port === "3000";
+  const API_BASE = (window.location.protocol === "file:" || !isDedicatedPort)
+    ? "http://localhost:5000"
+    : "";
 
   // Shopping Cart state: Map<string, number>
   const cart = new Map();
@@ -440,6 +453,11 @@ Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
             a.href = `https://wa.me/${s.whatsapp_number}`;
           });
         }
+        if (s.business_name) {
+          document.querySelectorAll(".brand-title").forEach((el) => {
+            el.textContent = s.business_name;
+          });
+        }
         if (s.tagline) {
           document.querySelectorAll(".brand-tagline").forEach((el) => {
             el.textContent = s.tagline;
@@ -448,6 +466,15 @@ Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
         if (s.hero_lead) {
           const heroLeadEl = document.querySelector(".hero-lead");
           if (heroLeadEl) heroLeadEl.textContent = s.hero_lead;
+        }
+        if (s.min_order_global) {
+          document.querySelectorAll(".trust-info strong").forEach((el) => {
+            if (el.textContent.includes("Min.") || el.textContent.includes("50")) {
+              el.textContent = `Min. ${s.min_order_global} Pcs`;
+            }
+          });
+          const minNotice = document.querySelector(".section-head p strong:last-child");
+          if (minNotice) minNotice.textContent = `${s.min_order_global} pcs per jenis menu`;
         }
       }
     } catch (_) {
@@ -473,9 +500,23 @@ Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
     // Filter only available menus for customers
     const availableMenus = menus.filter((m) => m.is_available);
 
-    const cardsHtml = availableMenus
+    // Deduplicate menus by name (taking latest entry if duplicate rows exist)
+    const uniqueMap = new Map();
+    availableMenus.forEach((m) => {
+      uniqueMap.set(m.name, m);
+    });
+    const cleanMenus = Array.from(uniqueMap.values());
+
+    const cardsHtml = cleanMenus
       .map((menu) => {
-        const cat = (menu.category || "Tradisional").toLowerCase();
+        let cat = (menu.category || "Tradisional").toLowerCase();
+        if (cat.includes("gurih") || cat.includes("asin")) {
+          cat = "gurih asin";
+        } else if (cat.includes("manis")) {
+          cat = "manis";
+        } else {
+          cat = "tradisional";
+        }
         const tagText = menu.category || "Tradisional";
         const imgSrc = menu.image_url || "assets/snack-goreng.jpg";
         const price = menu.price || 1000;
@@ -521,7 +562,7 @@ Mohon konfirmasi ketersediaan dan jadwal produksinya ya. Terima kasih!`;
       </div>
     `;
 
-    if (window.lucide) window.lucide.createIcons();
+    refreshIcons();
     syncAllCardUIs();
   }
 

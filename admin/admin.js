@@ -3,13 +3,24 @@
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Lucide Icons
-  if (window.lucide) {
-    window.lucide.createIcons();
+  // Lucide Icons Helper
+  function refreshIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {
+        console.warn("Lucide admin error:", e);
+      }
+    }
   }
+  refreshIcons();
+  window.addEventListener("load", refreshIcons);
 
-  // --- API Base URL ---
-  const API_BASE = ""; // Relative to server root
+  // --- API Base URL: Fallback to port 5000 if opened from Laragon port 80 or file:/// ---
+  const isDedicatedPort = window.location.port === "5000" || window.location.port === "3000";
+  const API_BASE = (window.location.protocol === "file:" || !isDedicatedPort)
+    ? "http://localhost:5000"
+    : "";
 
   // --- State ---
   let authToken = localStorage.getItem("dapur_admin_token") || null;

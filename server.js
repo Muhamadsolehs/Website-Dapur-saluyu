@@ -367,8 +367,12 @@ app.put("/api/menus/:id", requireAdminAuth, async (req, res) => {
     const { id } = req.params;
     const { name, variant, category, price, min_quantity, description, is_available, image_url } = req.body;
 
+    if (!name || !name.trim()) {
+      return res.status(400).json({ success: false, error: "Nama menu wajib diisi." });
+    }
+
     const payload = {
-      name: name?.trim(),
+      name: name.trim(),
       variant: variant ? variant.trim() : null,
       category: category || "Tradisional",
       price: parseInt(price, 10) || 1000,
@@ -411,13 +415,17 @@ app.put("/api/menus/:id", requireAdminAuth, async (req, res) => {
       return res.status(500).json({ success: false, error: error.message });
     }
 
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, error: `Menu dengan ID ${id} tidak ditemukan di database.` });
+    }
+
     if (image_url && name) {
       const imagesMap = getLocalImagesMap();
       imagesMap[name] = image_url;
       saveLocalImagesMap(imagesMap);
     }
 
-    res.json({ success: true, message: "Menu berhasil diperbarui!", menu: data ? data[0] : null });
+    res.json({ success: true, message: "Menu berhasil diperbarui!", menu: data[0] });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -526,16 +534,23 @@ app.put("/api/settings", requireAdminAuth, async (req, res) => {
     // Save locally
     saveLocalSettings(updated);
 
-    // Try saving to Supabase site_settings table
+    // Try saving to Supabase site_settings table with onConflict: "key"
     try {
       const entries = Object.entries(newSettings);
       for (const [key, val] of entries) {
-        await supabase
+        const { error: upsertErr } = await supabase
           .from("site_settings")
-          .upsert({ key, value: val, updated_at: new Date().toISOString() });
+          .upsert(
+            { key, value: val, updated_at: new Date().toISOString() },
+            { onConflict: "key" }
+          );
+
+        if (upsertErr) {
+          console.error(`Gagal upsert setting "${key}" ke Supabase:`, upsertErr);
+        }
       }
     } catch (err) {
-      console.warn("Info: site_settings di Supabase belum dibuat, tersimpan di lokal fallback.");
+      console.warn("Info: site_settings di Supabase belum dibuat, tersimpan di lokal fallback:", err.message);
     }
 
     res.json({ success: true, message: "Pengaturan berhasil diperbarui!", settings: updated });
